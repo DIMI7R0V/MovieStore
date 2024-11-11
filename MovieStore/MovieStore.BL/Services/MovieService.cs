@@ -17,5 +17,22 @@ namespace MovieStore.BL.Services
         {
             return _movieRepository.GetAllMovies();
         }
+
+        public void AddMovie(Movie movie)
+        {
+            _movieRepository.AddMovie(movie);
+        }
+
+        public Movie GetMovieById(int id)
+        {
+            return _movieRepository.GetMovieById(id);
+        }
+
+        public void DeleteMovie(int id)
+        {
+            _movieRepository.DeleteMovie(id);
+        }
+
+        
     }
 }
