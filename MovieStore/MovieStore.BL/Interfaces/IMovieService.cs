@@ -1,13 +1,14 @@
 ﻿using MovieStore.Models.DTO;
+using MovieStore.Models.Requests;
 
 namespace MovieStore.BL.Interfaces
 {
     public interface IMovieService
     {
         List<Movie> GetAllMovies();
-        Movie GetMovieById(int id);
+
         void AddMovie(Movie movie);
         void DeleteMovie(int id);
+        void UpdateMovie(Movie movieDto);
     }
-
 }
