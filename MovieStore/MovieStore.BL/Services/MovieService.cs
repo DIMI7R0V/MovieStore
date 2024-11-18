@@ -1,6 +1,7 @@
 ﻿using MovieStore.BL.Interfaces;
 using MovieStore.DL.Interfaces;
 using MovieStore.Models.DTO;
+using MovieStore.Models.Requests;
 
 namespace MovieStore.BL.Services
 {
@@ -12,7 +13,7 @@ namespace MovieStore.BL.Services
         {
             _movieRepository = movieRepository;
         }
-        
+
         public List<Movie> GetAllMovies()
         {
             return _movieRepository.GetAllMovies();
@@ -23,16 +24,14 @@ namespace MovieStore.BL.Services
             _movieRepository.AddMovie(movie);
         }
 
-        public Movie GetMovieById(int id)
+        public void UpdateMovie(Movie movieDto)
         {
-            return _movieRepository.GetMovieById(id);
+            throw new NotImplementedException();
         }
 
         public void DeleteMovie(int id)
         {
-            _movieRepository.DeleteMovie(id);
+            throw new NotImplementedException();
         }
-
-        
     }
 }

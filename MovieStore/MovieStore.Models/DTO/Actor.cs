@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace MovieStore.Models.DTO
 {
-    public class Movie
+    internal class Actor
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-
-        public int Year { get; set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
     }
 }

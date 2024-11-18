@@ -1,6 +1,8 @@
+using Mapster;
 using MovieStore.BL;
 using MovieStore.BL.Interfaces;
 using MovieStore.BL.Services;
+using MovieStore.MapsterConfig;
 
 namespace MovieStore
 {
@@ -14,6 +16,8 @@ namespace MovieStore
             builder.Services
                 .RegisterDataLayer()
                 .RegisterBusinessLayer();
+            builder.Services.AddMapster();
+            MapsterConfiguration.Configure();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -33,7 +37,6 @@ namespace MovieStore
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
