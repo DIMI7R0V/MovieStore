@@ -1,5 +1,4 @@
 ﻿using MovieStore.Models.DTO;
-using MovieStore.Models.Requests;
 
 namespace MovieStore.BL.Interfaces
 {
@@ -8,7 +7,7 @@ namespace MovieStore.BL.Interfaces
         List<Movie> GetAllMovies();
 
         void AddMovie(Movie movie);
-        void DeleteMovie(int id);
-        void UpdateMovie(Movie movieDto);
+
+
     }
 }

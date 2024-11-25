@@ -1,7 +1,5 @@
 using Mapster;
 using MovieStore.BL;
-using MovieStore.BL.Interfaces;
-using MovieStore.BL.Services;
 using MovieStore.MapsterConfig;
 
 namespace MovieStore
@@ -17,6 +15,7 @@ namespace MovieStore
                 .RegisterDataLayer()
                 .RegisterBusinessLayer();
             builder.Services.AddMapster();
+
             MapsterConfiguration.Configure();
 
             builder.Services.AddControllers();

@@ -14,14 +14,16 @@ namespace MovieStore.Controllers
         private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
 
-        public MoviesController(IMovieService movieService, IMapper mapper)
+        public MoviesController(
+            IMovieService movieService,
+            IMapper mapper)
         {
             _movieService = movieService;
             _mapper = mapper;
         }
 
         [HttpGet("GetAll")]
-        public IEnumerable<Movie> GetAll()
+        public IEnumerable<Movie> Get()
         {
             return _movieService.GetAllMovies();
         }
@@ -29,14 +31,15 @@ namespace MovieStore.Controllers
         [HttpPost("Add")]
         public void Add(AddMovieRequest movie)
         {
-            var mapperDto = _mapper.Map<Movie>(movie);
+            var movieDto = _mapper.Map<Movie>(movie);
 
-            _movieService.AddMovie(mapperDto);
+            _movieService.AddMovie(movieDto);
         }
+
         [HttpDelete("Delete")]
         public void Delete(int id)
         {
-            _movieService.DeleteMovie(id);
+
         }
     }
 }
