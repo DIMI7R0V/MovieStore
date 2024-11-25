@@ -9,8 +9,8 @@ namespace MovieStore.MapsterConfig
         public static void Configure()
         {
             TypeAdapterConfig<Movie, AddMovieRequest>
-            .NewConfig()
-            .TwoWays();
+                .NewConfig()
+                .TwoWays();
         }
     }
 }
