@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieStore.Models.Responses
+namespace MovieStore.BL.Interfaces
 {
-    class GetFullMovieDetailsResponse
-    {
-        IEnumerable<MovieView> Movies { get; set; } = [];
+    public interface IMovieBLService
+    { 
+        IEnumerable<MovieView> GetDetailedMovies();
+        
     }
 }
