@@ -3,10 +3,10 @@ using FluentValidation.AspNetCore;
 using Mapster;
 using MovieStore.BL;
 using MovieStore.MapsterConfig;
+using MovieStore.ServiceExtensions;
 using MovieStore.Validators;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using System.Security.Cryptography.X509Certificates;
 
 namespace MovieStore
 {
@@ -26,13 +26,15 @@ namespace MovieStore
 
             // Add services to the container.
             builder.Services
+                .AddConfigurations(builder.Configuration)
                 .RegisterDataLayer()
                 .RegisterBusinessLayer();
 
-            builder.Services.AddMapster();
             MapsterConfiguration.Configure();
+            builder.Services.AddMapster();
 
-            builder.Services.AddValidatorsFromAssemblyContaining<AddMovieRequestValidator>();
+            builder.Services
+                .AddValidatorsFromAssemblyContaining<AddMovieRequestValidator>();
             builder.Services.AddFluentValidationAutoValidation();
 
             builder.Services.AddControllers();

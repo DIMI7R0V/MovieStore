@@ -23,13 +23,9 @@ namespace MovieStore.BL.Services
             _movieRepository.AddMovie(movie);
         }
 
-        public Movie? GetById(int id) {
-            return _movieRepository.GetMovieById(id);
-        }
-
-        public void DeleteMovie(int id)
+        public Movie? GetById(string id)
         {
-            throw new NotImplementedException();
+            return _movieRepository.GetMovieById(id);
         }
     }
 }
