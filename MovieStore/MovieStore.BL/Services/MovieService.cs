@@ -7,10 +7,12 @@ namespace MovieStore.BL.Services
     public class MovieService : IMovieService
     {
         private readonly IMovieRepository _movieRepository;
+        private readonly IActorRepository _actorRepository;
 
-        public MovieService(IMovieRepository movieRepository)
+        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository)
         {
             _movieRepository = movieRepository;
+            _actorRepository = actorRepository;
         }
 
         public List<Movie> GetAllMovies()
@@ -18,8 +20,21 @@ namespace MovieStore.BL.Services
             return _movieRepository.GetAllMovies();
         }
 
-        public void AddMovie(Movie movie)
+        public void AddMovie(Movie? movie)
         {
+            if (movie is null) return;
+
+            foreach (var movieActor in movie.Actors)
+            {
+                var actor = _actorRepository.GetById(movieActor);
+
+                if (actor is null)
+                {
+                    throw new Exception(
+                        $"Actor with id {movieActor} does not exist");
+                }
+            }
+
             _movieRepository.AddMovie(movie);
         }
 

@@ -1,3 +1,4 @@
+﻿
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MovieStore.BL.Interfaces;
 using MovieStore.BL.Services;
@@ -11,6 +12,7 @@ namespace MovieStore.BL
         {
             services.AddSingleton<IMovieService, MovieService>();
             services.AddSingleton<IMovieBlService, MovieBlService>();
+            services.AddSingleton<IActorService, ActorService>();
 
             return services;
         }
