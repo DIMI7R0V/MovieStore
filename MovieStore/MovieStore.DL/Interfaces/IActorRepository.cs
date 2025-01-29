@@ -1,4 +1,4 @@
-﻿using MovieStore.Models.DTO;
+using MovieStore.Models.DTO;
 
 namespace MovieStore.DL.Interfaces
 {

@@ -1,4 +1,3 @@
-﻿
 using MovieStore.Models.Views;
 
 namespace MovieStore.Models.Responses

@@ -9,16 +9,16 @@ namespace MovieStore.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MoviesController : ControllerBase
+    public class MovieControler : ControllerBase
     {
         private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
-        private readonly ILogger<MoviesController> _logger;
+        private readonly ILogger<MovieControler> _logger;
 
-        public MoviesController(
+        public MovieControler(
             IMovieService movieService,
             IMapper mapper,
-            ILogger<MoviesController> logger)
+            ILogger<MovieControler> logger)
         {
             _movieService = movieService;
             _mapper = mapper;
