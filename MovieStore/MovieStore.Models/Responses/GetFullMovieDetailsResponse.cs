@@ -1,13 +1,8 @@
-﻿using MovieStore.Models.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MovieStore.Models.Views;
 
 namespace MovieStore.Models.Responses
 {
-    class GetFullMovieDetailsResponse
+    public class GetFullMovieDetailsResponse
     {
         IEnumerable<MovieView> Movies { get; set; } = [];
     }

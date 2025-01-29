@@ -1,10 +1,10 @@
-﻿using MovieStore.Models.DTO;
+using MovieStore.Models.DTO;
 
 namespace MovieStore.Models.Views
 {
     public class MovieView
     {
-        public int MovieId { get; set; }
+        public string MovieId { get; set; }
 
         public string MovieTitle { get; set; } = string.Empty;
 

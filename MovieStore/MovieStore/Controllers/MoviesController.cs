@@ -1,10 +1,9 @@
+
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieStore.BL.Interfaces;
-using MovieStore.DL.Interfaces;
 using MovieStore.Models.DTO;
 using MovieStore.Models.Requests;
-using System.Net;
 
 namespace MovieStore.Controllers
 {
@@ -26,10 +25,9 @@ namespace MovieStore.Controllers
             _logger = logger;
         }
 
-        
-        [HttpGet("GetAll")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("GetAll")]
         public IActionResult Get()
         {
             var result = _movieService.GetAllMovies();
@@ -46,12 +44,11 @@ namespace MovieStore.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(string id)
         {
-            _logger.LogInformation($"Getting movie with ID: {id}");
-            if (id <= 0)
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest("Id must be greater than 0");
+                return BadRequest("Id can't be null or empty");
             }
 
             var result = _movieService.GetById(id);
@@ -62,11 +59,9 @@ namespace MovieStore.Controllers
             }
 
             return Ok(result);
-
         }
 
         [HttpPost("Add")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Add(AddMovieRequest movie)
         {
             try
@@ -75,21 +70,19 @@ namespace MovieStore.Controllers
 
                 if (movieDto == null)
                 {
-                    return BadRequest("Cannot map movie");
+                    return BadRequest("Can't convert movie to movie DTO");
                 }
 
                 _movieService.AddMovie(movieDto);
 
                 return Ok();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, $"Error adding movie with");
                 return BadRequest(ex.Message);
             }
-
         }
-
 
         [HttpDelete("Delete")]
         public IActionResult Delete(int id)
@@ -99,7 +92,8 @@ namespace MovieStore.Controllers
                 return BadRequest("Id must be greater than 0");
             }
 
-            _movieService.DeleteMovie(id);
+            //_movieService.Delete(id);
+
 
             return Ok();
         }

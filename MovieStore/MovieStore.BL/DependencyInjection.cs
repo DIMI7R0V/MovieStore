@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using MovieStore.BL.Interfaces;
 using MovieStore.BL.Services;
 using MovieStore.DL;
@@ -10,7 +10,8 @@ namespace MovieStore.BL
         public static IServiceCollection RegisterBusinessLayer(this IServiceCollection services)
         {
             services.AddSingleton<IMovieService, MovieService>();
-            services.AddSingleton<IMovieBLService, MovieBLService>();
+            services.AddSingleton<IMovieBlService, MovieBlService>();
+            services.AddSingleton<IActorService, ActorService>();
 
             return services;
         }
