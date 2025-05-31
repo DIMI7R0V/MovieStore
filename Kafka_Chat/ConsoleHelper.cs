@@ -1,9 +1,4 @@
 ﻿using Kafka_Test_Project.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kafka_Test_Project
 {
@@ -17,7 +12,8 @@ namespace Kafka_Test_Project
 
         public static void WriteMsgFromUser(ChatMessage msg)
         {
-            Console.Write($"[{DateTime.Now.TimeOfDay}] [{msg.User}] {msg.Message}");
+            Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
+            Console.WriteLine($"[{DateTime.Now.TimeOfDay}] [{msg.User}] {msg.Message}");
 
         }
 

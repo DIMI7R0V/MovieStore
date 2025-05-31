@@ -1,11 +1,15 @@
 ﻿using Kafka_Test_Project;
 using Kafka_Test_Project.Models;
+using Kafka_Test_Project.Serialization;
 
 internal class Program
 {
     private static async Task Main(string[] args)
     {
+        Console.Clear();
+
         Console.Write("Enter your username: ");
+
         AppSetting.LocalUsername = Console.ReadLine();
 
         var producer = new KafkaProducer();
