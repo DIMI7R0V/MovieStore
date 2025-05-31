@@ -5,10 +5,10 @@ namespace MovieStore.Models.DTO
     public record Movie : ICacheItem<string>
     {
         [Key(0)]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [Key(1)]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Key(2)]
         public int Year { get; set; }
