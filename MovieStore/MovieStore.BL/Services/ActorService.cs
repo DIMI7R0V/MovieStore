@@ -27,34 +27,10 @@ namespace MovieStore.BL.Services
             await _actorRepository.AddActor(actor);
             _logger.LogInformation("Actor {ActorName} added successfully.", actor.Name);
         }
-
-        public async Task<IEnumerable<Actor>> GetActorsByIds(IEnumerable<string> actorIds)
+        public async Task<List<Actor>> GetAllActors()
         {
-            if (actorIds == null || !actorIds.Any())
-            {
-                _logger.LogWarning("Actor ID list is null or empty.");
-                return Enumerable.Empty<Actor>();
-            }
-
-            return await _actorRepository.GetActorsByIds(actorIds);
+            return await _actorRepository.GetAllActors();
         }
-
-        public async Task<Actor?> GetById(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                _logger.LogWarning("Invalid actor ID.");
-                return null;
-            }
-
-            return await _actorRepository.GetById(id);
-        }
-
-        public async Task<List<Actor>> GetAll()
-        {
-            return await _actorRepository.GetAll();
-        }
-
         public async Task<bool> UpdateActor(Actor actor)
         {
             if (actor == null || string.IsNullOrWhiteSpace(actor.Id))
@@ -76,5 +52,18 @@ namespace MovieStore.BL.Services
 
             return await _actorRepository.DeleteActor(id);
         }
+
+        public async Task<Actor?> GetActorById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _logger.LogWarning("Invalid actor ID.");
+                return null;
+            }
+
+            return await _actorRepository.GetActorById(id);
+        }
+
+
     }
 }

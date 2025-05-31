@@ -23,37 +23,8 @@ namespace MovieStore.Controllers
             _logger = logger;
         }
 
-        [HttpGet("GetAll")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAll()
-        {
-            var result = await _actorService.GetAll();
 
-            if (result == null || !result.Any())
-                return NotFound("No actors found.");
-
-            return Ok(result);
-        }
-
-        [HttpGet("GetById")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetById(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                return BadRequest("Id cannot be null or empty.");
-
-            var actor = await _actorService.GetById(id);
-
-            if (actor == null)
-                return NotFound($"Actor with ID: {id} not found.");
-
-            return Ok(actor);
-        }
-
-        [HttpPost("Add")]
+        [HttpPost("AddActor")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Add([FromBody] Actor request)
@@ -74,6 +45,19 @@ namespace MovieStore.Controllers
                 _logger.LogError(ex, "Error adding actor.");
                 return BadRequest("Something went wrong.");
             }
+        }
+
+        [HttpGet("GetAllActors")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _actorService.GetAllActors();
+
+            if (result == null || !result.Any())
+                return NotFound("No actors found.");
+
+            return Ok(result);
         }
 
         [HttpPut("Update")]
@@ -101,6 +85,23 @@ namespace MovieStore.Controllers
                 return NotFound($"Actor with ID: {id} not found.");
 
             return NoContent();
+        }
+
+        [HttpGet("GetActorById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("Id cannot be null or empty.");
+
+            var actor = await _actorService.GetActorById(id);
+
+            if (actor == null)
+                return NotFound($"Actor with ID: {id} not found.");
+
+            return Ok(actor);
         }
     }
 }

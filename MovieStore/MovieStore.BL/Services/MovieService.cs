@@ -17,34 +17,22 @@ namespace MovieStore.BL.Services
             _actorRepository = actorRepository;
             _logger = logger;
         }
+        public async Task AddMovie(Movie movie)
+        {
+            if (movie == null || movie.ActorIds == null)
+            {
+                _logger.LogWarning("Attempted to add a null movie.");
+                return;
+            }
+            movie.DateInserted = DateTime.UtcNow;
+            await _movieRepository.AddMovie(movie);
+            _logger.LogInformation("Movie {Title} added successfully.", movie.Title);
+        }
 
         public async Task<List<Movie>> GetAllMovies()
         {
             var movies = await _movieRepository.GetAllMovies();
             return movies ?? new List<Movie>();
-        }
-
-        public async Task<Movie?> GetMovieById(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                _logger.LogWarning("Invalid movie ID.");
-                return null;
-            }
-
-            return await _movieRepository.GetMovieById(id);
-        }
-
-        public async Task AddMovie(Movie movie)
-        {
-            if (movie == null)
-            {
-                _logger.LogWarning("Attempted to add a null movie.");
-                return;
-            }
-
-            await _movieRepository.AddMovie(movie);
-            _logger.LogInformation("Movie {Title} added successfully.", movie.Title);
         }
 
         public async Task<bool> UpdateMovie(Movie movie)
@@ -67,6 +55,16 @@ namespace MovieStore.BL.Services
             }
 
             return await _movieRepository.DeleteMovie(id);
+        }
+        public async Task<Movie?> GetMovieById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _logger.LogWarning("Invalid movie ID.");
+                return null;
+            }
+
+            return await _movieRepository.GetMovieById(id);
         }
     }
 }

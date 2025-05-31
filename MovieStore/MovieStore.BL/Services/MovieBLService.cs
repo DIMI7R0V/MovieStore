@@ -30,7 +30,7 @@ namespace MovieStore.BL.Services
 
                 foreach (var actorId in movie.ActorIds)
                 {
-                    var actor = _actorRepository.GetById(actorId);
+                    var actor = _actorRepository.GetActorById(actorId);
                 }
 
                 result.Add(movieDetails);

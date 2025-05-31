@@ -25,36 +25,6 @@ namespace MovieStore.Controllers
             _logger = logger;
         }
 
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> Get()
-        {
-            var result = await _movieService.GetAllMovies();
-
-            if (result == null || !result.Any())
-                return NotFound("No movies found");
-
-            return Ok(result);
-        }
-
-        [HttpGet("GetById")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetById(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                return BadRequest("Id can't be null or empty");
-
-            var result = await _movieService.GetMovieById(id);
-
-            if (result == null)
-                return NotFound($"Movie with ID:{id} not found");
-
-            return Ok(result);
-        }
-
         [HttpPost("Add")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,6 +47,21 @@ namespace MovieStore.Controllers
                 return BadRequest("Something went wrong.");
             }
         }
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("GetAllMovies")]
+        public async Task<IActionResult> Get()
+        {
+            var result = await _movieService.GetAllMovies();
+
+            if (result == null || !result.Any())
+                return NotFound("No movies found");
+
+            return Ok(result);
+        }
+
+
 
         [HttpPut("Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -103,6 +88,23 @@ namespace MovieStore.Controllers
                 return NotFound($"Movie with ID:{id} not found");
 
             return NoContent();
+        }
+
+        [HttpGet("GetActorById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("Id can't be null or empty");
+
+            var result = await _movieService.GetMovieById(id);
+
+            if (result == null)
+                return NotFound($"Movie with ID:{id} not found");
+
+            return Ok(result);
         }
     }
 }

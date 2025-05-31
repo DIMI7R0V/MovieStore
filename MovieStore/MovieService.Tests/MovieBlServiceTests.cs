@@ -69,7 +69,7 @@
 //                .Setup(x => x.GetAllMovies())
 //                .Returns(_movies);
 //            _actorRepositoryMock.Setup(x =>
-//                    x.GetById(It.IsAny<string>()))
+//                    x.GetActorById(It.IsAny<string>()))
 //                .Returns((string id) =>
 //                    _actors.FirstOrDefault(x => x.Id == id));
 
