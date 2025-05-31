@@ -1,54 +1,42 @@
 ﻿using MovieStore.BL.Interfaces;
 using MovieStore.DL.Interfaces;
-using MovieStore.Models.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+using MovieStore.Models.Responses;
 
 namespace MovieStore.BL.Services
 {
-    internal class MovieBLService : IMovieBLService
+    internal class MovieBLService : IMovieBlService
     {
-        private readonly IMovieService _movieRepository;
+        private readonly IMovieService _movieService;
         private readonly IActorRepository _actorRepository;
 
         public MovieBLService(IMovieService movieRepository, IActorRepository actorRepository)
         {
-            _movieRepository = movieRepository;
+            _movieService = movieRepository;
             _actorRepository = actorRepository;
         }
 
-        public List<MovieView> GetDetailedMovies()
+        public async Task<List<FullMovieDetails>> GetDetailedMovies()
         {
-            var result  = new List<MovieView>();
+            var result = new List<FullMovieDetails>();
 
-            var movies = _movieRepository.GetAllMovies();
+            var movies = await _movieService.GetAllMovies();
 
             foreach (var movie in movies)
             {
-                var actors = new List<Actor>();
-                var movieView = new MovieView()
-                {
-                    MovieId = movie.Id,
-                    MovieTitle = movie.Title,
-                    MovieYear = movie.Year
-                    Actors = _actorRepository.GetActorsById(movie.Id)
-                };
-                
+                var movieDetails = new FullMovieDetails();
+                movieDetails.Title = movie.Title;
+                movieDetails.Year = movie.Year;
+                movieDetails.Id = movie.Id;
 
-                foreach (var actor in movie.Actors)
+                foreach (var actorId in movie.ActorIds)
                 {
-                    var actorDto = _actorRepository.GetActorById(actor.Id);
-                    movieView.Actors.Add(actorDto);
+                    var actor = _actorRepository.GetById(actorId);
                 }
-                movieView.Actors = movieView.
-                result.Add(movieView);
+
+                result.Add(movieDetails);
             }
+            return result;
         }
 
-        return result;
     }
 }

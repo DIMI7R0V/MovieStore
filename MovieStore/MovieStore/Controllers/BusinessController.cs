@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieStore.BL.Interfaces;
 using MovieStore.Models.DTO;
+using MovieStore.Models.Responses;
 
 namespace MovieStore.Controllers
 {
@@ -9,39 +10,57 @@ namespace MovieStore.Controllers
     [Route("[controller]")]
     public class BusinessController : ControllerBase
     {
-        private readonly IMovieBlService _movieService;
+        private readonly IMovieService _movieService;
         private readonly IActorService _actorService;
+        private readonly ILogger<BusinessController> _logger;
 
-        public BusinessController(IMovieBlService movieService, IActorService actorService)
+        public BusinessController(
+            IMovieService movieService,
+            IActorService actorService,
+            ILogger<BusinessController> logger)
         {
             _movieService = movieService;
             _actorService = actorService;
+            _logger = logger;
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("GetAllMovieWithDetails")]
-        public IActionResult GetAllMovieWithDetails()
+        public async Task<IActionResult> GetDetailedMovies()
         {
-            var result = _movieService.GetDetailedMovies();
+            var result = await _movieService.GetAllMovies();
 
-            if (result == null || result.Count == 0)
+            if (result == null || !result.Any())
             {
-                return NotFound("No movies found");
+                return NotFound("No products found!");
             }
 
             return Ok(result);
         }
 
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost("AddActor")]
-        public IActionResult AddActor([FromBody] Actor actor)
-        {
-            _actorService.Add(actor);
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[HttpPost("AddActor")]
+        //public async Task<IActionResult> AddActor([FromBody] Actor actor)
+        //{
+        //    if (actor == null)
+        //    {
+        //        return BadRequest("Actor cannot be null.");
+        //    }
 
-            return Ok();
-        }
+        //    try
+        //    {
+        //        await _actorService.AddActor(actor);
+        //        return Ok("Actor added successfully.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Failed to add actor.");
+        //        return BadRequest("Error adding actor.");
+        //    }
+        //}
+
 
     }
 }

@@ -10,7 +10,7 @@ namespace MovieStore.DL.Repositories.MongoRepositories
 {
     public class ActorRepository : IActorRepository
     {
-        private readonly IMongoCollection<Actor> _actors;
+        private readonly IMongoCollection<Actor> _actorsCollection;
         private readonly ILogger<ActorRepository> _logger;
 
         public ActorRepository(
@@ -18,57 +18,130 @@ namespace MovieStore.DL.Repositories.MongoRepositories
             ILogger<ActorRepository> logger)
         {
             _logger = logger;
-            var client = new MongoClient(
-                mongoConfig.CurrentValue.ConnectionString);
 
-            var database = client.GetDatabase(
-                mongoConfig.CurrentValue.DatabaseName);
-
-            _actors = database.GetCollection<Actor>(
-                $"{nameof(Actor)}s");
-        }
-
-        public void AddActor(Actor actor)
-        {
-            actor.Id = System.Guid.NewGuid().ToString();
-            _actors.InsertOne(actor);
-        }
-
-        public void AddMovie(Actor movie)
-        {
-            if (movie == null)
+            if (string.IsNullOrEmpty(mongoConfig?.CurrentValue?.ConnectionString) || string.IsNullOrEmpty(mongoConfig?.CurrentValue?.DatabaseName))
             {
-                _logger.LogError("Movie is null");
+                _logger.LogError("MongoDb configuration is missing");
+
+                throw new ArgumentNullException("MongoDb configuration is missing");
+            }
+
+            var client = new MongoClient(mongoConfig.CurrentValue.ConnectionString);
+
+            var database = client.GetDatabase(mongoConfig.CurrentValue.DatabaseName);
+
+            _actorsCollection = database.GetCollection<Actor>($"{nameof(Actor)}s");
+        }
+
+        public async Task AddActor(Actor actor)
+        {
+            if (actor == null)
+            {
+                _logger.LogError("Attempted to add a null actor.");
                 return;
             }
 
             try
             {
-                movie.Id = Guid.NewGuid().ToString();
-
-                _actors.InsertOne(movie);
+                actor.Id = Guid.NewGuid().ToString();
+                await _actorsCollection.InsertOneAsync(actor);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError(e,
-                    $"Error adding movie {e.Message}-{e.StackTrace}");
+                _logger.LogError(ex, $"Error adding actor {actor?.Name}.");
+            }
+        }
+
+        public async Task<IEnumerable<Actor>> GetActorsByIds(IEnumerable<string> actorIds)
+        {
+            try
+            {
+                var filter = Builders<Actor>.Filter.In(a => a.Id, actorIds);
+                var result = await _actorsCollection.FindAsync(filter);
+                return await result.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving actors by IDs.");
+                return new List<Actor>();
+            }
+        }
+
+        public async Task<Actor?> GetById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _logger.LogWarning("Invalid actor ID provided.");
+                return null;
             }
 
+            try
+            {
+                var result = await _actorsCollection.FindAsync(a => a.Id == id);
+                return await result.FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error retrieving actor with ID {id}.");
+                return null;
+            }
         }
 
-
-        public IEnumerable<Actor> GetActorsByIds(IEnumerable<string> actorsIds)
+        public async Task<List<Actor>> GetAll()
         {
-            var result = _actors.Find(actor => actorsIds.Contains(actor.Id)).ToList();
-            return result;
+            try
+            {
+                var result = await _actorsCollection.FindAsync(_ => true);
+                return await result.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving all actors.");
+                return new List<Actor>();
+            }
         }
 
-        public Actor? GetById(string id)
+        public async Task<bool> UpdateActor(Actor actor)
         {
-            if (string.IsNullOrEmpty(id)) return null;
+            if (actor == null || string.IsNullOrWhiteSpace(actor.Id))
+            {
+                _logger.LogError("Invalid actor data for update.");
+                return false;
+            }
 
-            return _actors.Find(m => m.Id == id)
-                .FirstOrDefault();
+            try
+            {
+                var filter = Builders<Actor>.Filter.Eq(a => a.Id, actor.Id);
+                var result = await _actorsCollection.ReplaceOneAsync(filter, actor);
+                return result.IsAcknowledged && result.ModifiedCount > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating actor.");
+                return false;
+            }
         }
+
+        public async Task<bool> DeleteActor(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _logger.LogError("Invalid ID for deletion.");
+                return false;
+            }
+
+            try
+            {
+                var filter = Builders<Actor>.Filter.Eq(a => a.Id, id);
+                var result = await _actorsCollection.DeleteOneAsync(filter);
+                return result.DeletedCount > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error deleting actor with ID {id}.");
+                return false;
+            }
+        }
+
     }
 }

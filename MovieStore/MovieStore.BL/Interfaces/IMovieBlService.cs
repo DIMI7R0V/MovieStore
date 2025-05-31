@@ -1,9 +1,9 @@
-﻿using MovieStore.Models.Views;
+﻿using MovieStore.Models.Responses;
 
 namespace MovieStore.BL.Interfaces
 {
     public interface IMovieBlService
     {
-        List<MovieView> GetDetailedMovies();
+        Task<List<FullMovieDetails>> GetDetailedMovies();
     }
 }

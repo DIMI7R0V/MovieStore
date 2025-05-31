@@ -1,4 +1,5 @@
-﻿using MovieStore.BL.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using MovieStore.BL.Interfaces;
 using MovieStore.DL.Interfaces;
 using MovieStore.Models.DTO;
 
@@ -8,39 +9,64 @@ namespace MovieStore.BL.Services
     {
         private readonly IMovieRepository _movieRepository;
         private readonly IActorRepository _actorRepository;
+        private readonly ILogger<MovieService> _logger;
 
-        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository)
+        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository, ILogger<MovieService> logger)
         {
             _movieRepository = movieRepository;
             _actorRepository = actorRepository;
+            _logger = logger;
         }
 
-        public List<Movie> GetAllMovies()
+        public async Task<List<Movie>> GetAllMovies()
         {
-            return _movieRepository.GetAllMovies();
+            var movies = await _movieRepository.GetAllMovies();
+            return movies ?? new List<Movie>();
         }
 
-        public void AddMovie(Movie? movie)
+        public async Task<Movie?> GetMovieById(string id)
         {
-            if (movie is null) return;
-
-            foreach (var movieActor in movie.Actors)
+            if (string.IsNullOrWhiteSpace(id))
             {
-                var actor = _actorRepository.GetById(movieActor);
-
-                if (actor is null)
-                {
-                    throw new Exception(
-                        $"Actor with id {movieActor} does not exist");
-                }
+                _logger.LogWarning("Invalid movie ID.");
+                return null;
             }
 
-            _movieRepository.AddMovie(movie);
+            return await _movieRepository.GetMovieById(id);
         }
 
-        public Movie? GetById(string id)
+        public async Task AddMovie(Movie movie)
         {
-            return _movieRepository.GetMovieById(id);
+            if (movie == null)
+            {
+                _logger.LogWarning("Attempted to add a null movie.");
+                return;
+            }
+
+            await _movieRepository.AddMovie(movie);
+            _logger.LogInformation("Movie {Title} added successfully.", movie.Title);
+        }
+
+        public async Task<bool> UpdateMovie(Movie movie)
+        {
+            if (movie == null || string.IsNullOrWhiteSpace(movie.Id))
+            {
+                _logger.LogWarning("Invalid movie data for update.");
+                return false;
+            }
+
+            return await _movieRepository.UpdateMovie(movie);
+        }
+
+        public async Task<bool> DeleteMovie(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _logger.LogWarning("Invalid movie ID for deletion.");
+                return false;
+            }
+
+            return await _movieRepository.DeleteMovie(id);
         }
     }
 }
