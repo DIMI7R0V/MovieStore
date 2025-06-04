@@ -5,8 +5,9 @@ using Mapster;
 using MovieStore.BL;
 using MovieStore.HealthChecks;
 using MovieStore.MapsterConfig;
-using MovieStore.ServiceExtensions;
+using MovieStore.ServiceExtentions;
 using MovieStore.Validators;
+using MovieStoreB.DL;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
@@ -29,8 +30,8 @@ namespace MovieStore
             // Add services to the container.
             builder.Services
                 .AddConfigurations(builder.Configuration)
-                .RegisterDataLayer()
-                .RegisterBusinessLayer();
+                .AddDataDependencies(builder.Configuration)
+                .AddBusinessDependencies();
 
             MapsterConfiguration.Configure();
             builder.Services.AddMapster();

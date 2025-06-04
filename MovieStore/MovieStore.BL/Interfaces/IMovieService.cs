@@ -4,8 +4,8 @@ namespace MovieStore.BL.Interfaces
 {
     public interface IMovieService 
     {
-        Task AddMovie(Movie movie);
         Task<List<Movie>> GetAllMovies();
+        Task AddMovie(Movie movie);
         Task<bool> UpdateMovie(Movie movie);
         Task<bool> DeleteMovie(string id);
         Task<Movie?> GetMovieById(string id);

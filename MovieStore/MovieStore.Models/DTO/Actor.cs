@@ -6,16 +6,16 @@ namespace MovieStore.Models.DTO
     public class Actor : ICacheItem<string>
     {
         [Key(0)]
-        public string Id { get; set; } = string.Empty;  
+        public string Id { get; set; } 
 
         [Key(1)]
-        public DateTime DateInserted { get; set; }
+        public string Name { get; set; }
 
         [Key(2)]
-        public string Name { get; set; } = string.Empty;
+        public string Bio { get; set; } 
 
         [Key(3)]
-        public string Bio { get; set; } = string.Empty;
+        public DateTime DateInserted { get; set; }
 
         public string GetKey()
         {

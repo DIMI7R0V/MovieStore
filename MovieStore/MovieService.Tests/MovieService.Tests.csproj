@@ -21,6 +21,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\MovieStore.BL\MovieStore.BL.csproj" />
+		<ProjectReference Include="..\MovieStore.DL\MovieStore.DL.csproj" />
+		<ProjectReference Include="..\MovieStore.Models\MovieStore.Models.csproj" />
+		<ProjectReference Include="..\MovieStore\MovieStore.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

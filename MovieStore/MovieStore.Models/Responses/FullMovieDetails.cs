@@ -12,6 +12,6 @@ namespace MovieStore.Models.Responses
 
         public DateTime DateInserted { get; set; }
 
-        public List<Actor> Actors { get; set; } 
+        public List<Actor> ActorIds { get; set; } = new List<Actor>();
     }
 }

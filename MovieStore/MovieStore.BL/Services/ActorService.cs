@@ -5,16 +5,28 @@ using MovieStore.Models.DTO;
 
 namespace MovieStore.BL.Services
 {
-    internal class ActorService : IActorService
+    public class ActorService : IActorService
     {
         private readonly IActorRepository _actorRepository;
+        private readonly IActorBioGateway _actorBioGateway;
+        private readonly IMovieRepository _movieRepository;
         private readonly ILogger<ActorService> _logger;
 
-        public ActorService(IActorRepository actorRepository, ILogger<ActorService> logger)
+        public ActorService(IActorRepository actorRepository, ILogger<ActorService> logger, IActorBioGateway actorBioGateway, IMovieRepository movieRepository)
         {
             _actorRepository = actorRepository;
             _logger = logger;
+            _actorBioGateway = actorBioGateway;
+            _movieRepository = movieRepository;
         }
+
+        //public async Task<List<Movie>> GetMovies()
+        //{
+        //    var test = await _actorBioGateway.GetBioByActorId("1234567890");
+
+        //    var test1 = await _actorBioGateway.GetBioByActor(new Actor());
+        //    return await _movieRepository.GetAllMovies();
+        //}
 
         public async Task AddActor(Actor actor)
         {

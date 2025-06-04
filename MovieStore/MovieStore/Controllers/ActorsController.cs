@@ -6,7 +6,7 @@ using MovieStore.Models.DTO;
 namespace MovieStore.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ActorController : ControllerBase
     {
         private readonly IActorService _actorService;

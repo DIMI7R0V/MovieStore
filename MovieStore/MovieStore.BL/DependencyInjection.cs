@@ -7,18 +7,12 @@ namespace MovieStore.BL
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection RegisterBusinessLayer(this IServiceCollection services)
+        public static IServiceCollection
+            AddBusinessDependencies(this IServiceCollection services)
         {
             services.AddSingleton<IMovieService, MovieService>();
-            services.AddSingleton<IMovieBlService, MovieBLService>();
             services.AddSingleton<IActorService, ActorService>();
-
-            return services;
-        }
-
-        public static IServiceCollection RegisterDataLayer(this IServiceCollection services)
-        {
-            services.RegisterRepositories();
+            services.AddSingleton<IMovieBlService, MovieBLService>();
 
             return services;
         }

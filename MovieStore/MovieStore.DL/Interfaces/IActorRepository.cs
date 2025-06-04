@@ -1,8 +1,9 @@
+using MovieStore.DL.Cache;
 using MovieStore.Models.DTO;
 
 namespace MovieStore.DL.Interfaces
 {
-    public interface IActorRepository
+    public interface IActorRepository : ICacheRepository<string, Actor>
     {
         Task AddActor(Actor actor);
         Task<List<Actor>> GetAllActors();

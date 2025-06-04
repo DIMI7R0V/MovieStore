@@ -9,14 +9,26 @@ namespace MovieStore.BL.Services
     {
         private readonly IMovieRepository _movieRepository;
         private readonly IActorRepository _actorRepository;
+        private readonly IActorBioGateway _actorBioGateway;
         private readonly ILogger<MovieService> _logger;
 
-        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository, ILogger<MovieService> logger)
+        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository, ILogger<MovieService> logger, IActorBioGateway actorBioGateway)
         {
             _movieRepository = movieRepository;
             _actorRepository = actorRepository;
             _logger = logger;
+            _actorBioGateway = actorBioGateway;
         }
+
+        //public async Task<List<Movie>> GetMovies()
+        //{
+        //    var test = await _actorBioGateway.GetBioByActorId("1234567890");
+
+        //    var test1 = await _actorBioGateway.GetBioByActor(new Actor());
+
+        //    return await _movieRepository.GetAllMovies();
+        //}
+
         public async Task AddMovie(Movie movie)
         {
             if (movie == null || movie.ActorIds == null)
@@ -25,6 +37,12 @@ namespace MovieStore.BL.Services
                 return;
             }
             movie.DateInserted = DateTime.UtcNow;
+            foreach (var actor in movie.ActorIds)
+            {
+                if (!Guid.TryParse(actor, out _)) return;
+                _logger.LogWarning("Invalid actor ID: {ActorId}", actor);
+            }
+
             await _movieRepository.AddMovie(movie);
             _logger.LogInformation("Movie {Title} added successfully.", movie.Title);
         }
@@ -48,11 +66,9 @@ namespace MovieStore.BL.Services
 
         public async Task<bool> DeleteMovie(string id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                _logger.LogWarning("Invalid movie ID for deletion.");
+            var movie = await _movieRepository.GetMovieById(id);
+            if (movie == null)
                 return false;
-            }
 
             return await _movieRepository.DeleteMovie(id);
         }

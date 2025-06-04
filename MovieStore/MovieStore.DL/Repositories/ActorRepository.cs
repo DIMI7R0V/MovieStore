@@ -6,9 +6,9 @@ using MovieStore.DL.Interfaces;
 using MovieStore.Models.Configurations;
 using MovieStore.Models.DTO;
 
-namespace MovieStore.DL.Repositories.MongoRepositories
+namespace MovieStore.DL.Repositories
 {
-    public class ActorRepository : IActorRepository
+    internal class ActorRepository : IActorRepository
     {
         private readonly IMongoCollection<Actor> _actorsCollection;
         private readonly ILogger<ActorRepository> _logger;
@@ -36,6 +36,7 @@ namespace MovieStore.DL.Repositories.MongoRepositories
         public async Task AddActor(Actor actor)
         {
             actor.Id = Guid.NewGuid().ToString();
+            actor.DateInserted = DateTime.UtcNow;
             await _actorsCollection.InsertOneAsync(actor);
         }
 
@@ -56,7 +57,7 @@ namespace MovieStore.DL.Repositories.MongoRepositories
         public async Task<bool> DeleteActor(string id)
         {
             var result = await _actorsCollection.DeleteOneAsync(a => a.Id == id);
-            
+
             return result.DeletedCount > 0;
         }
 
@@ -64,6 +65,18 @@ namespace MovieStore.DL.Repositories.MongoRepositories
         {
             var result = await _actorsCollection.FindAsync(a => a.Id == id);
             return await result.FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Actor?>> DifLoad(DateTime lastExecuted)
+        {
+            var result = await _actorsCollection.FindAsync(m => m.DateInserted >= lastExecuted);
+
+            return await result.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Actor?>> FullLoad()
+        {
+            return await GetAllActors();
         }
     }
 }

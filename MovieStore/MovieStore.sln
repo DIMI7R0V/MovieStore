@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieStore.BL", "MovieStore
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieStore.DL", "MovieStore.DL\MovieStore.DL.csproj", "{8E8B4916-2708-4E29-BE2C-ECF94C2CDF95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieStore.Models", "MovieStore.Models\MovieStore.Models.csproj", "{4FBE92BF-5280-4E59-B99A-35138AF3C052}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieStore.Models", "MovieStore.Models\MovieStore.Models.csproj", "{4FBE92BF-5280-4E59-B99A-35138AF3C052}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieService.Tests", "MovieService.Tests\MovieService.Tests.csproj", "{0FAA5FA8-F090-43DB-84DB-FD7A02070229}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieService.Tests", "MovieService.Tests\MovieService.Tests.csproj", "{0FAA5FA8-F090-43DB-84DB-FD7A02070229}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorBioAPI", "ActorBioAPI\ActorBioAPI.csproj", "{792473E0-E2AF-4496-AD2F-B54E0352CE4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{0FAA5FA8-F090-43DB-84DB-FD7A02070229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FAA5FA8-F090-43DB-84DB-FD7A02070229}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FAA5FA8-F090-43DB-84DB-FD7A02070229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{792473E0-E2AF-4496-AD2F-B54E0352CE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{792473E0-E2AF-4496-AD2F-B54E0352CE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{792473E0-E2AF-4496-AD2F-B54E0352CE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{792473E0-E2AF-4496-AD2F-B54E0352CE4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

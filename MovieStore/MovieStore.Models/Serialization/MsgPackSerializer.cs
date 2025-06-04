@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using MessagePack;
+using MessagePack.Resolvers;
 
 namespace MovieStore.Models.Serialization
 {
@@ -7,7 +8,8 @@ namespace MovieStore.Models.Serialization
     {
         public byte[] Serialize(T data, SerializationContext context)
         {
-            return MessagePackSerializer.Serialize(data);
+            return MessagePackSerializer.Serialize(data,
+            MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance));
         }
     }
 }

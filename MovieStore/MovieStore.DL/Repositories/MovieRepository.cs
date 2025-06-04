@@ -1,14 +1,13 @@
-﻿
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MovieStore.DL.Interfaces;
 using MovieStore.Models.Configurations;
 using MovieStore.Models.DTO;
 
-namespace MovieStore.DL.Repositories.MongoRepositories
+namespace MovieStore.DL.Repositories
 {
-    public class MovieRepository : IMovieRepository
+    internal class MovieRepository : IMovieRepository
     {
         private readonly IMongoCollection<Movie> _movieCollection;
         private readonly ILogger<MovieRepository> _logger;
@@ -35,9 +34,8 @@ namespace MovieStore.DL.Repositories.MongoRepositories
 
         public async Task AddMovie(Movie movie)
         {
-            if (movie == null) return;
-
             movie.Id = Guid.NewGuid().ToString();
+
             await _movieCollection.InsertOneAsync(movie);
         }
 
@@ -53,7 +51,7 @@ namespace MovieStore.DL.Repositories.MongoRepositories
             var result = await _movieCollection.ReplaceOneAsync(m => m.Id == movie.Id, movie);
             return result.IsAcknowledged && result.ModifiedCount > 0;
         }
-        
+
         public async Task<bool> DeleteMovie(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) return false;
@@ -70,5 +68,21 @@ namespace MovieStore.DL.Repositories.MongoRepositories
             return await result.FirstOrDefaultAsync();
         }
 
+        protected async Task<IEnumerable<Movie?>> GetMoviesAfterDateTime(DateTime date)
+        {
+            var result = await _movieCollection.FindAsync(m => m.DateInserted >= date);
+
+            return await result.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Movie?>> FullLoad()
+        {
+            return await GetAllMovies();
+        }
+
+        public async Task<IEnumerable<Movie?>> DifLoad(DateTime lastExecuted)
+        {
+            return await GetMoviesAfterDateTime(lastExecuted);
+        }
     }
 }

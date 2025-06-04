@@ -9,16 +9,16 @@ namespace MovieStore.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MovieControler : ControllerBase
+    public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
-        private readonly ILogger<MovieControler> _logger;
+        private readonly ILogger<MovieController> _logger;
 
-        public MovieControler(
+        public MovieController(
             IMovieService movieService,
             IMapper mapper,
-            ILogger<MovieControler> logger)
+            ILogger<MovieController> logger)
         {
             _movieService = movieService;
             _mapper = mapper;
@@ -26,26 +26,16 @@ namespace MovieStore.Controllers
         }
 
         [HttpPost("Add")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Add([FromBody] AddMovieRequest request)
+        public async Task<IActionResult> Add([FromBody] Movie request)
         {
-            try
-            {
-                var movie = _mapper.Map<Movie>(request);
+            var movie = _mapper.Map<Movie>(request);
 
-                if (movie == null)
-                    return BadRequest("Invalid movie data");
+            await _movieService.AddMovie(movie);
 
-                await _movieService.AddMovie(movie);
-
-                return CreatedAtAction(nameof(GetById), new { id = movie.Id }, movie);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error adding movie");
-                return BadRequest("Something went wrong.");
-            }
+            return Ok();
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -54,14 +44,8 @@ namespace MovieStore.Controllers
         public async Task<IActionResult> Get()
         {
             var result = await _movieService.GetAllMovies();
-
-            if (result == null || !result.Any())
-                return NotFound("No movies found");
-
-            return Ok(result);
+            return result.Any() ? Ok(result) : NotFound("No movies found");
         }
-
-
 
         [HttpPut("Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -84,10 +68,7 @@ namespace MovieStore.Controllers
                 return BadRequest("Id must not be empty");
 
             var deleted = await _movieService.DeleteMovie(id);
-            if (!deleted)
-                return NotFound($"Movie with ID:{id} not found");
-
-            return NoContent();
+            return deleted ? NoContent() : NotFound($"Movie with ID:{id} not found");
         }
 
         [HttpGet("GetMovieById")]
@@ -100,11 +81,7 @@ namespace MovieStore.Controllers
                 return BadRequest("Id can't be null or empty");
 
             var result = await _movieService.GetMovieById(id);
-
-            if (result == null)
-                return NotFound($"Movie with ID:{id} not found");
-
-            return Ok(result);
+            return result == null ? NotFound($"Movie with ID: {id} not found") : Ok(result);
         }
     }
 }
